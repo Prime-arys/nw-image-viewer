@@ -10,10 +10,10 @@ Usage :
 - Use **"wnt2.py"** to generate the **"dwc.h"** file.
 - **"nw-img-vw"** is a gallery (up to ~20 images), use digits 0-9 and parentheses () for navigation.
 - **"nw-vid-vw"** allows you to make short videos/animations.
-- (use "menu" button to exit)
+- (in app, use "menu" button to exit)
 
 To build and use you will need : 
-- First of all, follow **step 1** [here](https://www.numworks.com/resources/engineering/software/build/). (on Windows add [dfu-util](http://dfu-util.sourceforge.net/) for Msys2)
+- First of all, follow **step 1** [here](https://www.numworks.com/resources/engineering/software/build/). (on Windows add [dfu-util](http://dfu-util.sourceforge.net/) to Msys2)
 - Then set up : https://github.com/Omega-Numworks/Omega-External,<br/>
 and integrate **"nw-img-vw"** and/or **"nw-vid-vw"**.
 
