@@ -16,6 +16,7 @@
 #define _B 0x0000
 #define FILENAME_LENGHT_MAX 512
 int lck=0;
+int page = 0;
 
 #include "dwp.h"
 
@@ -57,19 +58,19 @@ char ** removes(char ** first, char ** last) {
 
 void drawRomList(char **filenames, int nb, int selected_rom) {
 	char name_buffer[FILENAME_LENGHT_MAX];
-  draw_rectangle(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);
-  extapp_drawTextLarge("           nw-img-vw2           ", 0, 0, 65535, 0x18c3, false);
+
+  extapp_drawTextLarge("           nw-img-vw3           ", 0, 0, 65535, 0x18c3, false);
   int t=0;
   int i=0;
-  if (selected_rom>=10){t=nb-(nb-10);}
-  if (selected_rom>=20){t=nb-(nb-20);}
-  if (selected_rom>=30){t=nb-(nb-30);}
-  if (selected_rom>=40){t=nb-(nb-40);}
+  if (selected_rom>10 && selected_rom <21){t=nb-(nb-10);if(page!=1){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=1;} }
+  if (selected_rom>20 && selected_rom <31){t=nb-(nb-20);if(page!=2){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=2;} }
+  if (selected_rom>30 && selected_rom <41){t=nb-(nb-30);if(page!=3){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=3;} }
+  if (selected_rom>40 && selected_rom <51){t=nb-(nb-40);if(page!=4){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=4;} }
   
-  if (selected_rom<=10){t=0;}
+  if (selected_rom<=10){t=0;if(page!=0){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=0;}}
 	for(i; i < nb-t; i++) {
 		strncpy(name_buffer, filenames[i+t], FILENAME_LENGHT_MAX);
-		name_buffer[26] = '\0';
+		name_buffer[32] = '\0';
 
 		extapp_drawTextLarge(name_buffer, 5, (i+1)*20, selected_rom == i+t ? 0b1111100000000000 : 65535 , 8452, false);
 		
@@ -143,11 +144,16 @@ if(nb == 0) {
 		waitForKeyPressed();
 		return NULL;
 	} else {
+		draw_rectangle(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);
 		drawRomList(filenames, nb, selected_rom);
     waitForKeyReleased();
-		for(;;) {
-			extapp_msleep(10);
-			uint64_t scancode = extapp_scanKeyboard();
+	int aff=0;
+	for (;;)
+	{
+		extapp_msleep(10);
+		uint64_t scancode = extapp_scanKeyboard();
+		if (scancode && aff == 1){ draw_rectangle(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);aff = 0;}
+
 			if(scancode & SCANCODE_Down) {
 				selected_rom = (selected_rom + 1) % nb;
 				drawRomList(filenames, nb, selected_rom);
@@ -161,7 +167,8 @@ if(nb == 0) {
 				drawRomList(filenames, nb, selected_rom);
 				waitForKeyReleasedTimeout(200);
 			} else if(scancode & (SCANCODE_OK | SCANCODE_EXE))  {
-        		char* dat = extapp_fileRead(filenames[selected_rom], &len, EXTAPP_FLASH_FILE_SYSTEM);
+				aff = 1;
+				char *dat = extapp_fileRead(filenames[selected_rom], &len, EXTAPP_FLASH_FILE_SYSTEM);
 				if(dat[4] == 0x5f && dat[5] == 0x70) {
 					
 					if (dat[8] == 0x01 && lck ==0){hlock(lpin);}
@@ -187,8 +194,7 @@ if(nb == 0) {
 			} else if(scancode &  SCANCODE_Home) {
 				return NULL;
 			}
-		}
-		
+	}
 	}
 
 
