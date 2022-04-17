@@ -59,7 +59,7 @@ char ** removes(char ** first, char ** last) {
 void drawRomList(char **filenames, int nb, int selected_rom) {
 	char name_buffer[FILENAME_LENGHT_MAX];
 
-  extapp_drawTextLarge("           nw-img-vw3           ", 0, 0, 65535, 0x18c3, false);
+  extapp_drawTextLarge("           nw-img-vw4           ", 0, 0, 65535, 0x18c3, false);
   int t=0;
   int i=0;
   if (selected_rom>10 && selected_rom <21){t=nb-(nb-10);if(page!=1){draw_rectangle(0, 20, LCD_WIDTH_PX, LCD_HEIGHT_PX, 0xfffd);page=1;} }
@@ -138,9 +138,9 @@ char* lpin;
 
 
 if(nb == 0) {
-		extapp_drawTextLarge("          No ROM found          ", 0, 110, 65535, 0x18c3, false);
-		extapp_msleep(10);
-		waitForKeyReleasedTimeout(100);
+		extapp_drawTextLarge("          No IMG found          ", 0, 110, 65535, 0x18c3, false);
+		extapp_msleep(150);
+		waitForKeyReleasedTimeout(150);
 		waitForKeyPressed();
 		return NULL;
 	} else {
@@ -181,6 +181,12 @@ if(nb == 0) {
 					if (dat[8] == 0x01 && lck ==0){hlock(lpin);}
 					else {vdp(dat);}
 				}
+				else if (dat[4] == 0x5f && dat[5] == 0x77){
+					extapp_drawTextLarge("           in progress          ", 0, 120, 65535, 0x18c3, false);
+					waitForKeyReleasedTimeout(200);
+					if (dat[12] == 0x01 && lck ==0){hlock(lpin);}
+					else {vdp_2c(dat);}
+				}
         		
         		waitForKeyReleased();
         
@@ -193,6 +199,10 @@ if(nb == 0) {
 				waitForKeyReleased();
 			} else if(scancode &  SCANCODE_Home) {
 				return NULL;
+			} else if(scancode &  SCANCODE_Dot) {
+				extapp_drawTextLarge("         (c) Prime-arys         ", 0, 0, 65535, 0x18c3, false);
+				waitForKeyReleased();
+				extapp_drawTextLarge("           nw-img-vw4           ", 0, 0, 65535, 0x18c3, false);
 			}
 	}
 	}
