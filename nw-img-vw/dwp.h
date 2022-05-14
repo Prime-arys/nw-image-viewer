@@ -170,7 +170,7 @@ while (key != KEY_CTRL_MENU)
             if (key == KEY_CTRL_MENU){free(code2);return;}
             
             draw_rectangle(25+25*pint, 140, 6, 6, _B);
-            extapp_drawTextLarge("           nw-img-vw3           ", 0, 0, 65535, 0x18c3, false);
+            extapp_drawTextLarge("           nw-img-vw4           ", 0, 0, 65535, 0x18c3, false);
             pint+=1;
             if (pint>8){break;}
             if (key == KEY_CTRL_OK){break;}
